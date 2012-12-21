@@ -58,7 +58,6 @@ YUI.add('gossip-model', function (Y, NAME) {
 
             return {
                 query: res.getElementsByTagName('m')[0].getAttribute('q'),
-                selected: results[0], // first suggestion is always selected
                 suggestions: results
             };
         },
@@ -89,9 +88,6 @@ YUI.add('gossip-model', function (Y, NAME) {
     }, {
         ATTRS: {
             query: {
-                value: ''
-            },
-            selected: {
                 value: ''
             },
             suggestions: {
