@@ -10,10 +10,6 @@ YUI.add('gossip-model', function (Y, NAME) {
 
             this.gossipUrl = config.gossipUrl || 'http://sugg.us.search.yahoo.net/gossip-us-ura';
             this.numResults = config.numResults || '8';
-
-            this.on('change', Y.bind(function (e) {
-                Y.log(e.changed, 'info');
-            }, this));
         },
 
         sync: function (action, options, callback) {
@@ -33,10 +29,6 @@ YUI.add('gossip-model', function (Y, NAME) {
         },
 
         parse: function (res) {
-            if (!res.getElementsByTagName) {
-                throw new Error('wtf mate');
-            }
-
             var suggestions = res.getElementsByTagName('s'),
                 results = [],
                 parsed,
