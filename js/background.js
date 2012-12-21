@@ -4,28 +4,30 @@
 
     var omnibox = chrome.omnibox,
         yui = document.getElementById('yui'),
-        query;
+        handleGossipResponse,
+        currentQuery,
+        suggest;
+
+    window.addEventListener('message', function (e) {
+        var data = e.data || {},
+            name = data.name || '';
+
+        if (!name) {
+            return;
+        }
+
+        switch (name) {
+        case 'gossipResponse':
+            handleGossipResponse(data);
+            return;
+        default:
+            console.warn('Ignoring window message: ' + data.name);
+        }
+    });
 
     omnibox.onInputChanged.addListener(function (query, callback) {
-        var handler = function (e) {
-            var data = e.data;
-
-            if (data.name === 'gossipResponse' && data.query === query) {
-//                console.dir(data.results);
-
-                omnibox.setDefaultSuggestion({
-                    description: data.results.shift().description
-                });
-
-                callback(data.results);
-            }
-        };
-        window.addEventListener('message', handler);
-
-        // clean up potential leaks
-        setTimeout(function () {
-            window.removeEventListener('message', handler);
-        }, 5000);
+        currentQuery = query;
+        suggest = callback;
 
         yui.contentWindow.postMessage({
             name: 'gossipRequest',
@@ -33,4 +35,15 @@
         }, '*');
     });
 
+    handleGossipResponse = function (data) {
+        if (data.query === currentQuery) {
+            // selected suggestion should not have content
+            omnibox.setDefaultSuggestion({
+                description: data.results.shift().description
+            });
+
+            // tell omnibox what suggestions to render
+            suggest(data.results);
+        }
+    };
 }());
