@@ -45,7 +45,7 @@ YUI({
                     name: 'gossipResponse',
                     query: json.query,
                     results: results
-                }, '*');
+                }, e.origin);
 
                 gossipModel.save();
             });
