@@ -36,14 +36,20 @@
     });
 
     handleGossipResponse = function (data) {
-        if (data.query === currentQuery) {
-            // selected suggestion should not have content
-            omnibox.setDefaultSuggestion({
-                description: data.results.shift().description
-            });
+        var first;
 
-            // tell omnibox what suggestions to render
-            suggest(data.results);
+        if (data.query === currentQuery) {
+            first = data.results && data.results.shift();
+
+            if (first) {
+                // selected suggestion should not have content
+                omnibox.setDefaultSuggestion({
+                    description: first.description
+                });
+
+                // tell omnibox what suggestions to render
+                suggest(data.results);
+            }
         }
     };
 }());
