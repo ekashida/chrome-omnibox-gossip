@@ -1,7 +1,7 @@
 /*global YUI:true,chrome:true,console:true,XMLHttpRequest:true*/
 YUI({
     filter: 'raw'
-}).use('event-custom', 'gossip-model', function (Y) {
+}).use('event-custom', 'gossip-model', 'escape', function (Y) {
     'use strict';
 
     var gossipModel = new Y.GossipModel();
@@ -22,6 +22,7 @@ YUI({
                 var results = [],
                     suggestions,
                     json,
+                    text,
                     len,
                     i;
 
@@ -35,9 +36,10 @@ YUI({
                 len = suggestions.length;
 
                 for (i = 0; i < len; i += 1) {
+                    text = suggestions[i].k;
                     results[i] = {
-                        description: suggestions[i].k,
-                        content: suggestions[i].k
+                        description: Y.Escape.html(text),
+                        content: text
                     };
                 }
 
